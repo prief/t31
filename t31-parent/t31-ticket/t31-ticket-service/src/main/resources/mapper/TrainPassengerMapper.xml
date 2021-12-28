@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaikeba.t31.ticket.mapper.PassengerMapper">
+
+    <resultMap type="TrainPassenger" id="TrainPassengerResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="idNumber" column="id_number"/>
+        <result property="type" column="type"/>
+        <result property="address" column="address"/>
+        <result property="name" column="name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectTrainPassengerVo">
+        select id,
+               user_id,
+               phone,
+               email,
+               id_number,
+               type,
+               address,
+               name,
+               create_time,
+               update_time
+        from train_passenger
+    </sql>
+
+    <select id="selectTrainPassengerList" parameterType="TrainPassenger" resultMap="TrainPassengerResult">
+        <include refid="selectTrainPassengerVo"/>
+        <where>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="email != null  and email != ''">and email = #{email}</if>
+            <if test="idNumber != null  and idNumber != ''">and id_number = #{idNumber}</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="address != null  and address != ''">and address = #{address}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectTrainPassengerById" parameterType="Long" resultMap="TrainPassengerResult">
+        <include refid="selectTrainPassengerVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTrainPassenger" parameterType="TrainPassenger" useGeneratedKeys="true" keyProperty="id">
+        insert into train_passenger
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="phone != null">phone,</if>
+            <if test="email != null">email,</if>
+            <if test="idNumber != null">id_number,</if>
+            <if test="type != null">type,</if>
+            <if test="address != null">address,</if>
+            <if test="name != null">name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="idNumber != null">#{idNumber},</if>
+            <if test="type != null">#{type},</if>
+            <if test="address != null">#{address},</if>
+            <if test="name != null">#{name},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTrainPassenger" parameterType="TrainPassenger">
+        update train_passenger
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="idNumber != null">id_number = #{idNumber},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTrainPassengerById" parameterType="Long">
+        delete
+        from train_passenger
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteTrainPassengerByIds" parameterType="String">
+        delete from train_passenger where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

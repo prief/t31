@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaikeba.t31.order.mapper.TrainOrderMapper">
+    
+    <resultMap type="TrainOrder" id="TrainOrderResult">
+        <result property="id"    column="id"    />
+        <result property="trainDate"    column="train_date"    />
+        <result property="passengerId"    column="passenger_id"    />
+        <result property="trainNumber"    column="train_number"    />
+        <result property="startStationNo"    column="start_station_no"    />
+        <result property="startStationName"    column="start_station_name"    />
+        <result property="endStationNo"    column="end_station_no"    />
+        <result property="endStationName"    column="end_station_name"    />
+        <result property="carriageNo"    column="carriage_no"    />
+        <result property="seatNo"    column="seat_no"    />
+        <result property="seatName"    column="seat_name"    />
+        <result property="seatType"    column="seat_type"    />
+        <result property="money"    column="money"    />
+        <result property="status"    column="status"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="comment"    column="comment"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTrainOrderVo">
+        select id, train_date, passenger_id, train_number, start_station_no, start_station_name, end_station_no, end_station_name, carriage_no, seat_no, seat_name, seat_type, money, status, start_time, comment, create_time, update_time from train_order
+    </sql>
+
+    <select id="selectTrainOrderList" parameterType="TrainOrder" resultMap="TrainOrderResult">
+        <include refid="selectTrainOrderVo"/>
+        <where>  
+            <if test="trainDate != null "> and train_date = #{trainDate}</if>
+            <if test="passengerId != null "> and passenger_id = #{passengerId}</if>
+            <if test="trainNumber != null  and trainNumber != ''"> and train_number = #{trainNumber}</if>
+            <if test="startStationNo != null "> and start_station_no = #{startStationNo}</if>
+            <if test="startStationName != null  and startStationName != ''"> and start_station_name like concat('%', #{startStationName}, '%')</if>
+            <if test="endStationNo != null "> and end_station_no = #{endStationNo}</if>
+            <if test="endStationName != null  and endStationName != ''"> and end_station_name like concat('%', #{endStationName}, '%')</if>
+            <if test="carriageNo != null "> and carriage_no = #{carriageNo}</if>
+            <if test="seatNo != null "> and seat_no = #{seatNo}</if>
+            <if test="seatName != null  and seatName != ''"> and seat_name like concat('%', #{seatName}, '%')</if>
+            <if test="seatType != null  and seatType != ''"> and seat_type = #{seatType}</if>
+            <if test="money != null "> and money = #{money}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="comment != null  and comment != ''"> and comment = #{comment}</if>
+        </where>
+    </select>
+    
+    <select id="selectTrainOrderById" parameterType="Long" resultMap="TrainOrderResult">
+        <include refid="selectTrainOrderVo"/>
+        where id = #{id}
+    </select>
+    <select id="getSeatTypeByNumberId" resultType="com.kaikeba.t31.order.vo.SeatTypeVO">
+        SELECT `type`     AS type,
+               AVG(price) AS price
+        FROM train_carriage
+        WHERE number_id = #{numberId}
+        GROUP BY type
+    </select>
+
+    <select id="listPage" resultType="com.kaikeba.t31.order.entity.TrainOrder">
+        SELECT
+        a.*,
+        b.name as passengerName
+        FROM
+        train_order a
+        INNER JOIN
+        train_passenger b
+        ON
+        a.`passenger_id` = b.`id`
+        INNER JOIN
+        admin_user c
+        ON
+        b.`user_id` = c.`id`
+        <where>
+            <if test="userName != null and userName != ''">
+                and c.user_name = #{userName}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertTrainOrder" parameterType="TrainOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into train_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="trainDate != null">train_date,</if>
+            <if test="passengerId != null">passenger_id,</if>
+            <if test="trainNumber != null">train_number,</if>
+            <if test="startStationNo != null">start_station_no,</if>
+            <if test="startStationName != null">start_station_name,</if>
+            <if test="endStationNo != null">end_station_no,</if>
+            <if test="endStationName != null">end_station_name,</if>
+            <if test="carriageNo != null">carriage_no,</if>
+            <if test="skuId != null">sku_id,</if>
+            <if test="seatNo != null">seat_no,</if>
+            <if test="seatName != null">seat_name,</if>
+            <if test="seatType != null">seat_type,</if>
+            <if test="money != null">money,</if>
+            <if test="status != null">status,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="comment != null">comment,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="trainDate != null">#{trainDate},</if>
+            <if test="passengerId != null">#{passengerId},</if>
+            <if test="trainNumber != null">#{trainNumber},</if>
+            <if test="startStationNo != null">#{startStationNo},</if>
+            <if test="startStationName != null">#{startStationName},</if>
+            <if test="endStationNo != null">#{endStationNo},</if>
+            <if test="endStationName != null">#{endStationName},</if>
+            <if test="carriageNo != null">#{carriageNo},</if>
+            <if test="skuId != null">#{skuId},</if>
+            <if test="seatNo != null">#{seatNo},</if>
+            <if test="seatName != null">#{seatName},</if>
+            <if test="seatType != null">#{seatType},</if>
+            <if test="money != null">#{money},</if>
+            <if test="status != null">#{status},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="comment != null">#{comment},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTrainOrder" parameterType="TrainOrder">
+        update train_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="trainDate != null">train_date = #{trainDate},</if>
+            <if test="passengerId != null">passenger_id = #{passengerId},</if>
+            <if test="trainNumber != null">train_number = #{trainNumber},</if>
+            <if test="startStationNo != null">start_station_no = #{startStationNo},</if>
+            <if test="startStationName != null">start_station_name = #{startStationName},</if>
+            <if test="endStationNo != null">end_station_no = #{endStationNo},</if>
+            <if test="endStationName != null">end_station_name = #{endStationName},</if>
+            <if test="carriageNo != null">carriage_no = #{carriageNo},</if>
+            <if test="seatNo != null">seat_no = #{seatNo},</if>
+            <if test="seatName != null">seat_name = #{seatName},</if>
+            <if test="seatType != null">seat_type = #{seatType},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="comment != null">comment = #{comment},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTrainOrderById" parameterType="Long">
+        delete from train_order where id = #{id}
+    </delete>
+
+    <delete id="deleteTrainOrderByIds" parameterType="String">
+        delete from train_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

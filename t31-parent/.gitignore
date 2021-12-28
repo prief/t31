@@ -1,0 +1,13 @@
+.idea
+/t31-*/target
+/t31--*/target
+/t31-*/target/*
+/t31--*/target/*
+
+.DS_Store
+*.iml
+
+/.idea/*
+/target/*
+
+!.mvn/wrapper/maven-wrapper.jar

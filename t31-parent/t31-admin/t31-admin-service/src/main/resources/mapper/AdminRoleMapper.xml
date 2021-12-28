@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaikeba.t31.admin.mapper.AdminRoleMapper">
+    
+    <resultMap type="AdminRole" id="AdminRoleResult">
+        <result property="id"    column="id"    />
+        <result property="comment"    column="comment"    />
+        <result property="name"    column="name"    />
+        <result property="title"    column="title"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectAdminRoleVo">
+        select id, comment, name, title, create_time, update_time from admin_role
+    </sql>
+
+    <select id="selectAdminRoleList" parameterType="AdminRole" resultMap="AdminRoleResult">
+        <include refid="selectAdminRoleVo"/>
+        <where>  
+            <if test="comment != null  and comment != ''"> and comment = #{comment}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+        </where>
+    </select>
+    
+    <select id="selectAdminRoleById" parameterType="Long" resultMap="AdminRoleResult">
+        <include refid="selectAdminRoleVo"/>
+        where id = #{id}
+    </select>
+    <select id="getRolesByUserId" resultType="com.kaikeba.t31.admin.entity.AdminRole">
+        SELECT
+            a.id AS "id",
+            a.name AS "name",
+            a.comment AS "comment",
+            a.title AS "title"
+        FROM
+            admin_role a
+                LEFT JOIN admin_role_user b ON b.role_id = a.id
+                LEFT JOIN admin_user c ON c.id = b.user_id
+        WHERE
+            c.id = #{id}
+    </select>
+
+    <insert id="insertAdminRole" parameterType="AdminRole" useGeneratedKeys="true" keyProperty="id">
+        insert into admin_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="comment != null">comment,</if>
+            <if test="name != null">name,</if>
+            <if test="title != null">title,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="comment != null">#{comment},</if>
+            <if test="name != null">#{name},</if>
+            <if test="title != null">#{title},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAdminRole" parameterType="AdminRole">
+        update admin_role
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="comment != null">comment = #{comment},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAdminRoleById" parameterType="Long">
+        delete from admin_role where id = #{id}
+    </delete>
+
+    <delete id="deleteAdminRoleByIds" parameterType="String">
+        delete from admin_role where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

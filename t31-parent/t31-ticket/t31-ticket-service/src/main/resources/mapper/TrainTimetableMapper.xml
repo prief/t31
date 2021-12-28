@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaikeba.t31.ticket.mapper.TrainTimetableMapper">
+    
+    <resultMap type="TrainTimetable" id="TrainTimetableResult">
+        <result property="id"    column="id"    />
+        <result property="numberId"    column="number_id"    />
+        <result property="trainNumber"    column="train_number"    />
+        <result property="startStation"    column="start_station"    />
+        <result property="endStation"    column="end_station"    />
+        <result property="fromStation"    column="from_station"    />
+        <result property="toStation"    column="to_station"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="arrivalTime"    column="arrival_time"    />
+        <result property="duration"    column="duration"    />
+        <result property="comment"    column="comment"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTrainTimetableVo">
+        select id, number_id, train_number, start_station, end_station, from_station, to_station, start_time, arrival_time, duration, comment, create_time, update_time from train_timetable
+    </sql>
+
+    <select id="selectTrainTimetableList" parameterType="TrainTimetable" resultMap="TrainTimetableResult">
+        <include refid="selectTrainTimetableVo"/>
+        <where>  
+            <if test="numberId != null "> and number_id = #{numberId}</if>
+            <if test="trainNumber != null  and trainNumber != ''"> and train_number = #{trainNumber}</if>
+            <if test="startStation != null  and startStation != ''"> and start_station = #{startStation}</if>
+            <if test="endStation != null  and endStation != ''"> and end_station = #{endStation}</if>
+            <if test="fromStation != null  and fromStation != ''"> and from_station = #{fromStation}</if>
+            <if test="toStation != null  and toStation != ''"> and to_station = #{toStation}</if>
+            <if test="startTime != null  and startTime != ''"> and start_time = #{startTime}</if>
+            <if test="arrivalTime != null  and arrivalTime != ''"> and arrival_time = #{arrivalTime}</if>
+            <if test="duration != null  and duration != ''"> and duration = #{duration}</if>
+            <if test="comment != null  and comment != ''"> and comment = #{comment}</if>
+        </where>
+    </select>
+    
+    <select id="selectTrainTimetableById" parameterType="Long" resultMap="TrainTimetableResult">
+        <include refid="selectTrainTimetableVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTrainTimetable" parameterType="TrainTimetable" useGeneratedKeys="true" keyProperty="id">
+        insert into train_timetable
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="numberId != null">number_id,</if>
+            <if test="trainNumber != null">train_number,</if>
+            <if test="startStation != null">start_station,</if>
+            <if test="endStation != null">end_station,</if>
+            <if test="fromStation != null">from_station,</if>
+            <if test="toStation != null">to_station,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="arrivalTime != null">arrival_time,</if>
+            <if test="duration != null">duration,</if>
+            <if test="comment != null">comment,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="numberId != null">#{numberId},</if>
+            <if test="trainNumber != null">#{trainNumber},</if>
+            <if test="startStation != null">#{startStation},</if>
+            <if test="endStation != null">#{endStation},</if>
+            <if test="fromStation != null">#{fromStation},</if>
+            <if test="toStation != null">#{toStation},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="arrivalTime != null">#{arrivalTime},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="comment != null">#{comment},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTrainTimetable" parameterType="TrainTimetable">
+        update train_timetable
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="numberId != null">number_id = #{numberId},</if>
+            <if test="trainNumber != null">train_number = #{trainNumber},</if>
+            <if test="startStation != null">start_station = #{startStation},</if>
+            <if test="endStation != null">end_station = #{endStation},</if>
+            <if test="fromStation != null">from_station = #{fromStation},</if>
+            <if test="toStation != null">to_station = #{toStation},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="arrivalTime != null">arrival_time = #{arrivalTime},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="comment != null">comment = #{comment},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTrainTimetableById" parameterType="Long">
+        delete from train_timetable where id = #{id}
+    </delete>
+
+    <delete id="deleteTrainTimetableByIds" parameterType="String">
+        delete from train_timetable where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

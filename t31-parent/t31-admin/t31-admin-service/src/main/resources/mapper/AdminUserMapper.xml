@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaikeba.t31.admin.mapper.AdminUserMapper">
+
+    <resultMap type="AdminUser" id="AdminUserResult">
+        <result property="id" column="id"/>
+        <result property="birthday" column="birthday"/>
+        <result property="comment" column="comment"/>
+        <result property="email" column="email"/>
+        <result property="lock" column="lock"/>
+        <result property="password" column="password"/>
+        <result property="principal" column="principal"/>
+        <result property="realName" column="real_name"/>
+        <result property="salt" column="salt"/>
+        <result property="sex" column="sex"/>
+        <result property="tel" column="tel"/>
+        <result property="userName" column="user_name"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectAdminUserVo">
+        select id,
+               birthday,
+               comment,
+               email,
+               lock,
+               password,
+               principal,
+               real_name,
+               salt,
+               sex,
+               tel,
+               user_name,
+               dept_id,
+               post_id,
+               create_time,
+               update_time
+        from admin_user
+    </sql>
+
+    <select id="selectAdminUserList" parameterType="AdminUser" resultMap="AdminUserResult">
+        <include refid="selectAdminUserVo"/>
+        <where>
+            <if test="birthday != null ">and birthday = #{birthday}</if>
+            <if test="comment != null  and comment != ''">and comment = #{comment}</if>
+            <if test="email != null  and email != ''">and email = #{email}</if>
+            <if test="lock != null ">and lock = #{lock}</if>
+            <if test="password != null  and password != ''">and password = #{password}</if>
+            <if test="principal != null ">and principal = #{principal}</if>
+            <if test="realName != null  and realName != ''">and real_name like concat('%', #{realName}, '%')</if>
+            <if test="salt != null  and salt != ''">and salt = #{salt}</if>
+            <if test="sex != null  and sex != ''">and sex = #{sex}</if>
+            <if test="tel != null  and tel != ''">and tel = #{tel}</if>
+            <if test="userName != null  and userName != ''">and user_name like concat('%', #{userName}, '%')</if>
+            <if test="deptId != null ">and dept_id = #{deptId}</if>
+            <if test="postId != null ">and post_id = #{postId}</if>
+        </where>
+    </select>
+
+    <select id="selectAdminUserById" parameterType="Long" resultMap="AdminUserResult">
+        <include refid="selectAdminUserVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="pageList" resultType="com.kaikeba.t31.admin.entity.AdminUser">
+        select
+            a.id as "id",
+            a.birthday as "birthday",
+            a.comment as "comment",
+            a.email as "email",
+            a.lock as "lock",
+            a.password as "password",
+            a.principal as "principal",
+            a.real_name as "realName",
+            a.salt as "salt",
+            a.sex as "sex",
+            a.tel as "tel",
+            a.user_name as "userName",
+            a.dept_id as "deptId",
+            a.post_id as "postId",
+            c.title as "deptName",
+            b.name as "postName"
+        from
+        admin_user a
+        LEFT JOIN admin_post b ON b.id = a.post_id
+        LEFT JOIN admin_dept c ON c.id = a.dept_id
+        <where>
+            <if test="adminUser.userName != null and adminUser.userName != ''">
+                a.user_name = #{adminUser.userName}
+            </if>
+            <if test="adminUser.realName != null and adminUser.realName != ''">
+                and a.real_name like '%${adminUser.realName}%'
+            </if>
+            <if test="adminUser.deptId != null and adminUser.deptId != ''">
+                a.dept_id = #{adminUser.deptId}
+            </if>
+            <if test="adminUser.postId != null and adminUser.postId != ''">
+                a.post_id = #{adminUser.postId}
+            </if>
+            <if test="adminUser.lock != null">
+                a.lock = #{adminUser.lock}
+            </if>
+            <if test="adminUser.postName != null ">
+                and b.name = #{adminUser.postName}
+            </if>
+            <if test="adminUser.principal != null ">
+                and a.principal = #{adminUser.principal}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertAdminUser" parameterType="AdminUser" useGeneratedKeys="true" keyProperty="id">
+        insert into admin_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="birthday != null">birthday,</if>
+            <if test="comment != null">comment,</if>
+            <if test="email != null">email,</if>
+            <if test="lock != null">`lock`,</if>
+            <if test="password != null">password,</if>
+            <if test="principal != null">principal,</if>
+            <if test="realName != null">real_name,</if>
+            <if test="salt != null">salt,</if>
+            <if test="sex != null">sex,</if>
+            <if test="tel != null">tel,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="postId != null">post_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="birthday != null">#{birthday},</if>
+            <if test="comment != null">#{comment},</if>
+            <if test="email != null">#{email},</if>
+            <if test="lock != null">#{lock},</if>
+            <if test="password != null">#{password},</if>
+            <if test="principal != null">#{principal},</if>
+            <if test="realName != null">#{realName},</if>
+            <if test="salt != null">#{salt},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="tel != null">#{tel},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="postId != null">#{postId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAdminUser" parameterType="AdminUser">
+        update admin_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="comment != null">comment = #{comment},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="lock != null">lock = #{lock},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="principal != null">principal = #{principal},</if>
+            <if test="realName != null">real_name = #{realName},</if>
+            <if test="salt != null">salt = #{salt},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="tel != null">tel = #{tel},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="postId != null">post_id = #{postId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAdminUserById" parameterType="Long">
+        delete
+        from admin_user
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteAdminUserByIds" parameterType="String">
+        delete from admin_user where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteRoleByUser">
+        delete from
+            admin_role_user
+        where
+            user_id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>t31-parent</artifactId>
+        <groupId>com.kaikeba.t31</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>t31-ticket</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>t31-ticket-api</module>
+        <module>t31-ticket-service</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <t31-ticket.version>1.0.0-SNAPSHOT</t31-ticket.version>
+        <t31-common.version>1.0.0-SNAPSHOT</t31-common.version>
+    </properties>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.kaikeba.t31</groupId>
+            <artifactId>t31-common</artifactId>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+
+        <dependencies>
+            <dependency>
+                <groupId>com.kaikeba.t31.ticket</groupId>
+                <artifactId>t31-ticket-api</artifactId>
+                <version>${t31-ticket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kaikeba.t31.ticket</groupId>
+                <artifactId>t31-ticket-service</artifactId>
+                <version>${t31-ticket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kaikeba.t31</groupId>
+                <artifactId>t31-common</artifactId>
+                <version>${t31-common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kaikeba.t31.admin</groupId>
+                <artifactId>t31-admin-api</artifactId>
+                <version>${t31-common.version}</version>
+            </dependency>
+        </dependencies>
+
+    </dependencyManagement>
+
+
+</project>

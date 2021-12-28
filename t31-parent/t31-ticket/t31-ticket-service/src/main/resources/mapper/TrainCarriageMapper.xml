@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaikeba.t31.ticket.mapper.TrainCarriageMapper">
+    
+    <resultMap type="TrainPassenger" id="TrainCarriageResult">
+        <result property="id"    column="id"    />
+        <result property="numberId"    column="number_id"    />
+        <result property="carriageNo"    column="carriage_no"    />
+        <result property="type"    column="type"    />
+        <result property="count"    column="count"    />
+        <result property="price"    column="price"    />
+        <result property="comment"    column="comment"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTrainCarriageVo">
+        select id, number_id, carriage_no, type, count, price, comment, create_time, update_time from train_carriage
+    </sql>
+
+    <select id="selectTrainCarriageList" parameterType="TrainPassenger" resultMap="TrainCarriageResult">
+        <include refid="selectTrainCarriageVo"/>
+        <where>  
+            <if test="numberId != null "> and number_id = #{numberId}</if>
+            <if test="carriageNo != null "> and carriage_no = #{carriageNo}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="count != null "> and count = #{count}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="comment != null  and comment != ''"> and comment = #{comment}</if>
+        </where>
+    </select>
+    
+    <select id="selectTrainCarriageById" parameterType="Long" resultMap="TrainCarriageResult">
+        <include refid="selectTrainCarriageVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTrainCarriage" parameterType="TrainPassenger" useGeneratedKeys="true" keyProperty="id">
+        insert into train_carriage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="numberId != null">number_id,</if>
+            <if test="carriageNo != null">carriage_no,</if>
+            <if test="type != null">type,</if>
+            <if test="count != null">count,</if>
+            <if test="price != null">price,</if>
+            <if test="comment != null">comment,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="numberId != null">#{numberId},</if>
+            <if test="carriageNo != null">#{carriageNo},</if>
+            <if test="type != null">#{type},</if>
+            <if test="count != null">#{count},</if>
+            <if test="price != null">#{price},</if>
+            <if test="comment != null">#{comment},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTrainCarriage" parameterType="TrainPassenger">
+        update train_carriage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="numberId != null">number_id = #{numberId},</if>
+            <if test="carriageNo != null">carriage_no = #{carriageNo},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="count != null">count = #{count},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="comment != null">comment = #{comment},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTrainCarriageById" parameterType="Long">
+        delete from train_carriage where id = #{id}
+    </delete>
+
+    <delete id="deleteTrainCarriageByIds" parameterType="String">
+        delete from train_carriage where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

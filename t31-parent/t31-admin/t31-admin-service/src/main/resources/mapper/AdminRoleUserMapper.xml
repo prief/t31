@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaikeba.t31.admin.mapper.AdminRoleUserMapper">
+
+    <resultMap type="AdminRoleUser" id="AdminRoleUserResult">
+        <result property="roleId" column="role_id"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
+    <sql id="selectAdminRoleUserVo">
+        select role_id, user_id
+        from admin_role_user
+    </sql>
+
+    <select id="selectAdminRoleUserList" parameterType="AdminRoleUser" resultMap="AdminRoleUserResult">
+        <include refid="selectAdminRoleUserVo"/>
+        <where>
+            <if test="roleId != null ">and role_id = #{roleId}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+        </where>
+    </select>
+
+    <select id="selectAdminRoleUserByRoleId" parameterType="Long" resultMap="AdminRoleUserResult">
+        <include refid="selectAdminRoleUserVo"/>
+        where role_id = #{roleId}
+    </select>
+
+    <insert id="insertAdminRoleUser" parameterType="AdminRoleUser">
+        insert into admin_role_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">role_id,</if>
+            <if test="userId != null">user_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">#{roleId},</if>
+            <if test="userId != null">#{userId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAdminRoleUser" parameterType="AdminRoleUser">
+        update admin_role_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where role_id = #{roleId}
+    </update>
+
+    <delete id="deleteAdminRoleUserByRoleId" parameterType="Long">
+        delete
+        from admin_role_user
+        where role_id = #{roleId}
+    </delete>
+
+    <delete id="deleteAdminRoleUserByRoleIds" parameterType="String">
+        delete from admin_role_user where role_id in
+        <foreach item="roleId" collection="array" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </delete>
+</mapper>

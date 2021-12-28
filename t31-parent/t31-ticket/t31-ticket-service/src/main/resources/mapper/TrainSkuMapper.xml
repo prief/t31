@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaikeba.t31.ticket.mapper.TrainSkuMapper">
+    <insert id="createSku">
+		INSERT INTO
+			`train_sku`(train_date, number_id,train_number, start_station, end_station, from_station,to_station,start_time,arrival_time,duration,
+						`hard_seat_stock`,
+						`first_seat_stock`,
+						`second_seat_stock`,
+						`special_seat_stock`,
+						`hard_sleeper_stock`,
+						`soft_sleeper_stock`)
+		SELECT
+			#{date}, number_id,train_number, start_station, end_station, from_station, to_station, start_time, arrival_time, duration,
+			(SELECT SUM(b.count) FROM train_carriage AS b WHERE b.type='硬坐' AND b.number_id= a.number_id),
+			(SELECT SUM(b.count) FROM train_carriage AS b WHERE b.type='一等座' AND b.number_id= a.number_id),
+			(SELECT SUM(b.count) FROM train_carriage AS b WHERE b.type='二等座' AND b.number_id= a.number_id),
+			(SELECT SUM(b.count) FROM train_carriage AS b WHERE b.type='特等座' AND b.number_id= a.number_id),
+			(SELECT SUM(b.count) FROM train_carriage AS b WHERE b.type='硬卧' AND b.number_id= a.number_id),
+			(SELECT SUM(b.count) FROM train_carriage AS b WHERE b.type='软卧' AND b.number_id= a.number_id)
+		FROM
+			train_timetable AS a
+	</insert>
+
+    <select id="selectByPage" resultType="com.kaikeba.t31.ticket.entity.TrainSkuEntity">
+		select
+			*
+		from
+			train_sku
+		<where>
+		<if test="trainDate != null">
+			train_date = #{trainDate}
+		</if>
+		<if test="trainNumber != null and trainNumber != ''">
+			and train_number = #{trainNumber}
+		</if>
+		<if test="fromStation != null and fromStation != ''">
+			and from_station = #{fromStation}
+		</if>
+		<if test="toStation != null and toStation != ''">
+			and to_station = #{toStation}
+		</if>
+		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,27 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: order-service
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      discovery:
+        server-addr: devkmos-inner.kaikeba.com:20075
+        namespace: 9fd8192c-3635-446c-8578-f1556c21aa4e
+        metadata:
+          version: 1.0.0
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+        file-extension: yaml
+        extension-configs[0]:
+          data-id: common.yaml
+          refresh: true
+        extension-configs[1]:
+          data-id: db.yaml
+          refresh: true
+        extension-configs[2]:
+          data-id: security.yaml
+          refresh: true

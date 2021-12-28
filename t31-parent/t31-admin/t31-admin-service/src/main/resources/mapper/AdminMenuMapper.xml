@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaikeba.t31.admin.mapper.AdminMenuMapper">
+
+    <resultMap type="AdminMenu" id="AdminMenuResult">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="sequence" column="sequence"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="path" column="path"/>
+        <result property="name" column="name"/>
+        <result property="component" column="component"/>
+        <result property="hideInMenu" column="hide_in_menu"/>
+        <result property="notCache" column="not_cache"/>
+        <result property="icon" column="icon"/>
+        <result property="isExpand" column="is_expand"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectAdminMenuVo">
+        select id,
+               title,
+               sequence,
+               parent_id,
+               path,
+               name,
+               component,
+               hide_in_menu,
+               not_cache,
+               icon,
+               is_expand,
+               create_time,
+               update_time
+        from admin_menu
+    </sql>
+
+    <select id="selectAdminMenuList" parameterType="AdminMenu" resultMap="AdminMenuResult">
+        <include refid="selectAdminMenuVo"/>
+        <where>
+            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="sequence != null ">and sequence = #{sequence}</if>
+            <if test="parentId != null ">and parent_id = #{parentId}</if>
+            <if test="path != null  and path != ''">and path = #{path}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="component != null  and component != ''">and component = #{component}</if>
+            <if test="hideInMenu != null ">and hide_in_menu = #{hideInMenu}</if>
+            <if test="notCache != null ">and not_cache = #{notCache}</if>
+            <if test="icon != null  and icon != ''">and icon = #{icon}</if>
+            <if test="isExpand != null ">and is_expand = #{isExpand}</if>
+        </where>
+    </select>
+
+    <select id="selectAdminMenuById" parameterType="Long" resultMap="AdminMenuResult">
+        <include refid="selectAdminMenuVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectMenuByUserId" resultType="com.kaikeba.t31.admin.entity.AdminMenu">
+        select
+        DISTINCT
+        a.id AS `id`,
+        a.title AS `title`,
+        a.sequence AS `sequence`,
+        a.parent_id AS `parentId`,
+        a.is_expand AS `expand`,
+        a.path as `path`,
+        a.name as `name`,
+        a.component as `component`,
+        a.hide_in_menu as `hideInMenu`,
+        a.not_cache as `notCache`,
+        a.icon as `icon`
+        from
+        admin_menu a
+        LEFT JOIN admin_role_menu b ON b.menu_id = a.id
+        LEFT JOIN admin_role c ON c.id = b.role_id
+        LEFT JOIN admin_role_user d ON d.role_id = c.id
+        LEFT JOIN admin_user e ON e.id = d.user_id
+        <where>
+            <if test="uid != null">
+                and e.id = #{uid}
+            </if>
+        </where>
+        order by a.sequence
+    </select>
+
+    <select id="selectByRoleId" resultType="com.kaikeba.t31.admin.entity.AdminMenu">
+        select DISTINCT a.id           AS `id`,
+                        a.title        AS `title`,
+                        a.sequence     AS `sequence`,
+                        a.parent_id    AS `parentId`,
+                        a.is_expand    AS `expand`,
+                        a.path         as `path`,
+                        a.name         as `name`,
+                        a.component    as `component`,
+                        a.hide_in_menu as `hideInMenu`,
+                        a.not_cache    as `notCache`,
+                        a.icon         as `icon`
+        from admin_menu a
+                 LEFT JOIN admin_role_menu b ON b.menu_id = a.id
+                 LEFT JOIN admin_role c ON c.id = b.role_id
+                 LEFT JOIN admin_role_user d ON d.role_id = c.id
+                 LEFT JOIN admin_user e ON e.id = d.user_id
+        where c.id = #{roleId}
+    </select>
+
+    <insert id="insertAdminMenu" parameterType="AdminMenu" useGeneratedKeys="true" keyProperty="id">
+        insert into admin_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="sequence != null">sequence,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="path != null">path,</if>
+            <if test="name != null">name,</if>
+            <if test="component != null">component,</if>
+            <if test="hideInMenu != null">hide_in_menu,</if>
+            <if test="notCache != null">not_cache,</if>
+            <if test="icon != null">icon,</if>
+            <if test="isExpand != null">is_expand,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="sequence != null">#{sequence},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="path != null">#{path},</if>
+            <if test="name != null">#{name},</if>
+            <if test="component != null">#{component},</if>
+            <if test="hideInMenu != null">#{hideInMenu},</if>
+            <if test="notCache != null">#{notCache},</if>
+            <if test="icon != null">#{icon},</if>
+            <if test="isExpand != null">#{isExpand},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAdminMenu" parameterType="AdminMenu">
+        update admin_menu
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="sequence != null">sequence = #{sequence},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="path != null">path = #{path},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="component != null">component = #{component},</if>
+            <if test="hideInMenu != null">hide_in_menu = #{hideInMenu},</if>
+            <if test="notCache != null">not_cache = #{notCache},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="isExpand != null">is_expand = #{isExpand},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAdminMenuById" parameterType="Long">
+        delete
+        from admin_menu
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteAdminMenuByIds" parameterType="String">
+        delete from admin_menu where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

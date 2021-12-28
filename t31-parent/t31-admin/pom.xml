@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>t31-parent</artifactId>
+        <groupId>com.kaikeba.t31</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>t31-admin</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>t31-admin-api</module>
+        <module>t31-admin-service</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <t31-admin.version>1.0.0-SNAPSHOT</t31-admin.version>
+    </properties>
+
+    <dependencies>
+        <!-- spring-boot-web web开发，包括spring mvc、tomcat、jackson等  -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kaikeba.t31</groupId>
+            <artifactId>t31-common</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <dependencyManagement>
+
+        <dependencies>
+            <dependency>
+                <groupId>com.kaikeba.t31.admin</groupId>
+                <artifactId>t31-admin-api</artifactId>
+                <version>${t31-admin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kaikeba.t31.admin</groupId>
+                <artifactId>t31-admin-service</artifactId>
+                <version>${t31-admin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kaikeba.t31</groupId>
+                <artifactId>t31-common</artifactId>
+                <version>${t31-admin.version}</version>
+            </dependency>
+        </dependencies>
+
+    </dependencyManagement>
+
+
+</project>

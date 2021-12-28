@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaikeba.t31.admin.mapper.AdminDeptMapper">
+
+    <resultMap type="AdminDept" id="AdminDeptResult">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="sequence" column="sequence"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="address" column="address"/>
+        <result property="comment" column="comment"/>
+        <result property="tel" column="tel"/>
+        <result property="isExpand" column="is_expand"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectAdminDeptVo">
+        select id,
+               title,
+               sequence,
+               parent_id,
+               address,
+               comment,
+               tel,
+               is_expand,
+               create_time,
+               update_time
+        from admin_dept
+    </sql>
+
+    <select id="selectAdminDeptList" parameterType="AdminDept" resultMap="AdminDeptResult">
+        <include refid="selectAdminDeptVo"/>
+        <where>
+            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="sequence != null ">and sequence = #{sequence}</if>
+            <if test="parentId != null ">and parent_id = #{parentId}</if>
+            <if test="address != null  and address != ''">and address = #{address}</if>
+            <if test="comment != null  and comment != ''">and comment = #{comment}</if>
+            <if test="tel != null  and tel != ''">and tel = #{tel}</if>
+            <if test="isExpand != null ">and is_expand = #{isExpand}</if>
+        </where>
+    </select>
+
+    <select id="selectAdminDeptById" parameterType="Long" resultMap="AdminDeptResult">
+        <include refid="selectAdminDeptVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAdminDept" parameterType="AdminDept" useGeneratedKeys="true" keyProperty="id">
+        insert into admin_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="sequence != null">sequence,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="address != null">address,</if>
+            <if test="comment != null">comment,</if>
+            <if test="tel != null">tel,</if>
+            <if test="isExpand != null">is_expand,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="sequence != null">#{sequence},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="address != null">#{address},</if>
+            <if test="comment != null">#{comment},</if>
+            <if test="tel != null">#{tel},</if>
+            <if test="isExpand != null">#{isExpand},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAdminDept" parameterType="AdminDept">
+        update admin_dept
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="sequence != null">sequence = #{sequence},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="comment != null">comment = #{comment},</if>
+            <if test="tel != null">tel = #{tel},</if>
+            <if test="isExpand != null">is_expand = #{isExpand},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAdminDeptById" parameterType="Long">
+        delete
+        from admin_dept
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteAdminDeptByIds" parameterType="String">
+        delete from admin_dept where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
